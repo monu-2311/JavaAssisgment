@@ -3,6 +3,7 @@ package com.lattice.service;
 import java.util.List;
 
 import com.lattice.payload.DoctorDto;
+import com.lattice.payload.PatientDto;
 
 public interface DoctorService {
 
@@ -11,5 +12,5 @@ public interface DoctorService {
 	
 	void deleteDoctor(Integer doctorDto);
 	
-	List<DoctorDto> SuggestingDoctorBasedOnSymptom(Integer Id);
+	List<PatientDto> SuggestingDoctorBasedOnSymptom(Integer Id);
 }

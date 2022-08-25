@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lattice.payload.ApiResponse;
 import com.lattice.payload.DoctorDto;
+import com.lattice.payload.PatientDto;
 import com.lattice.service.DoctorService;
 
 @RestController
@@ -49,10 +50,10 @@ public class DoctorController {
 	}
 	
 	
-	@GetMapping("/pateint/{patientId}")
-	public ResponseEntity<List<DoctorDto>> SuggestingDoctorBasedOnSymptom(@PathVariable Integer patientId ){
-		List<DoctorDto> doctorDtoList = this.doctorService.SuggestingDoctorBasedOnSymptom(patientId);
+	@GetMapping("/doctor/{doctorId}")
+	public ResponseEntity<List<PatientDto>> SuggestingDoctorBasedOnSymptom(@PathVariable Integer doctorId ){
+		List<PatientDto> doctorDtoList = this.doctorService.SuggestingDoctorBasedOnSymptom(doctorId);
 		
-		return new ResponseEntity<List<DoctorDto>>(doctorDtoList,HttpStatus.CREATED);
+		return new ResponseEntity<List<PatientDto>>(doctorDtoList,HttpStatus.CREATED);
 	}
 }

@@ -12,6 +12,7 @@ import com.lattice.repositories.DoctorRepo;
 import com.lattice.repositories.PatientRepo;
 import com.lattice.service.DoctorService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.*;
 import java.util.stream.Collectors;   
@@ -55,36 +56,52 @@ public class DoctorServiceImp implements DoctorService {
 
 	//Function Used to return of List of doctor according to  patient city and Symptom
 	@Override
-	public List<DoctorDto> SuggestingDoctorBasedOnSymptom(Integer patientId) {
-	
-	//Check if patient present in database or not if not then throw the ResourceNotFoundException exception
-	Patient patient = this.patientRepo.findById(patientId).orElseThrow(()-> new ResourceNotFoundException("Patient", "PatientId", patientId));
-	 
-	//get the patient city and and store in location so I can use it to find if there any Doctor available or not
-	String location = patient.getCity();
-	
-	//Return the String of specialty according to the patient Symptom
-	String speciality = symptomTOspeciality(patient.getSymptom());
-	
-	//List of Doctor at patient location or city 
-	List<Doctor> doctorCity = this.doctorRepo.findByCityContaining(location);
-	
-	//Handle the Exception if Doctor is not present at patient city or location 
-	if(doctorCity.isEmpty()) throw new IllegalArgumentException("We are still waiting to expand to your location"); 
-	
-	//List of Doctor according to patient Symptom
-	List<Doctor> doctorSpeciality = this.doctorRepo.findBySpecialityContaining(speciality);
-	
-	//Handle the Exception we don't have Doctor for the present Symptom in given city. 
-	if(doctorSpeciality.isEmpty()) throw new IllegalArgumentException("There isn’t any doctor present at your location for your symptom"); 
-	
-	
-	//List of all Doctor who present in given city and treat the patient symptom
-	List<Doctor> doctorLists = this.doctorRepo.findBySpecialityAndCity(location, speciality);
-	
-	List<DoctorDto> doctorDtoLists = doctorLists.stream().map((dDL)->this.modelemapper.map(dDL, DoctorDto.class)).collect(Collectors.toList());	
-	 
-		return doctorDtoLists;
+	public List<PatientDto> SuggestingDoctorBasedOnSymptom(Integer doctorId) {
+		//find the paitent Deltails
+	    Doctor doc = this.doctorRepo.findById(doctorId).orElseThrow(()->new ResourceNotFoundException("patientId", "patientId", doctorId));
+	    
+	    //store paitent city into city
+	    String city  = doc.getCity();
+	    String sys = doc.getSpeciality();
+	    
+	    List<Patient> pat1 = this.patientRepo.findByCityContaining(city);
+	    if(pat1.isEmpty()) {
+	    	throw new IllegalArgumentException("We are still waiting for expand");
+	    }
+	    
+	    List<Patient> paitent = new ArrayList<Patient>();
+	    
+	    if(sys.equalsIgnoreCase("Orthopedic")) {
+	    	
+	        paitent = this.patientRepo.findBySymptomAndCity(city, "Arthritis", "Backpain", "Tissue injuries");
+	    	if(paitent.isEmpty()) {
+		    	throw new IllegalArgumentException("Patient Is not able");
+		    }
+	    	
+	    }else if(sys.equalsIgnoreCase("Dermatology")) {
+	    	 paitent = this.patientRepo.findBySymptomAndCity(city, "Skin infection", "skin burn");
+	    	if(paitent.isEmpty()) {
+		    	throw new IllegalArgumentException("Patient Is not able");
+		    }
+	    	
+	    }else if(sys.equalsIgnoreCase("Gynecology")) {
+	    	paitent = this.patientRepo.findBySymptomAndCity(city, "Dysmenorrhea");
+	    	if(paitent.isEmpty()) {
+		    	throw new IllegalArgumentException("Patient Is not able");
+		    }
+	    	
+	    }else{
+	    	paitent = this.patientRepo.findBySymptomAndCity(city, "Ear pain");
+	    	if(paitent.isEmpty()) {
+		    	throw new IllegalArgumentException("Patient Is not able");
+		    }
+	    	
+	    	
+	    }
+	  
+	    List<PatientDto> ptDtoList = paitent.stream().map((e)-> this.modelemapper.map(e,PatientDto.class)).collect(Collectors.toList());
+    	
+    	return ptDtoList;
 	}
 		
 	
@@ -99,5 +116,7 @@ public class DoctorServiceImp implements DoctorService {
 		
 		return "Null";
 	}
+	
+	
 
 }
