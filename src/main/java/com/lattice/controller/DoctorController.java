@@ -50,7 +50,7 @@ public class DoctorController {
 	}
 	
 	
-	@GetMapping("/doctor/{doctorId}")
+	@GetMapping("/sugPatient/{doctorId}")
 	public ResponseEntity<List<PatientDto>> SuggestingDoctorBasedOnSymptom(@PathVariable Integer doctorId ){
 		List<PatientDto> doctorDtoList = this.doctorService.SuggestingDoctorBasedOnSymptom(doctorId);
 		
