@@ -52,8 +52,8 @@ public class DoctorController {
 	
 	@GetMapping("/sugPatient/{doctorId}")
 	public ResponseEntity<List<PatientDto>> SuggestingDoctorBasedOnSymptom(@PathVariable Integer doctorId ){
-		List<PatientDto> doctorDtoList = this.doctorService.SuggestingDoctorBasedOnSymptom(doctorId);
+		List<PatientDto> PatientDtoList = this.doctorService.SuggestingDoctorBasedOnSymptom(doctorId);
 		
-		return new ResponseEntity<List<PatientDto>>(doctorDtoList,HttpStatus.CREATED);
+		return new ResponseEntity<List<PatientDto>>(PatientDtoList,HttpStatus.CREATED);
 	}
 }

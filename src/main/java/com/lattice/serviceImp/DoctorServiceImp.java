@@ -58,7 +58,7 @@ public class DoctorServiceImp implements DoctorService {
 	@Override
 	public List<PatientDto> SuggestingDoctorBasedOnSymptom(Integer doctorId) {
 		//find the paitent Deltails
-	    Doctor doc = this.doctorRepo.findById(doctorId).orElseThrow(()->new ResourceNotFoundException("patientId", "patientId", doctorId));
+	    Doctor doc = this.doctorRepo.findById(doctorId).orElseThrow(()->new ResourceNotFoundException("doctorId", "doctorId", doctorId));
 	    
 	    //store paitent city into city
 	    String city  = doc.getCity();
@@ -95,8 +95,6 @@ public class DoctorServiceImp implements DoctorService {
 	    	if(paitent.isEmpty()) {
 		    	throw new IllegalArgumentException("Patient Is not able");
 		    }
-	    	
-	    	
 	    }
 	  
 	    List<PatientDto> ptDtoList = paitent.stream().map((e)-> this.modelemapper.map(e,PatientDto.class)).collect(Collectors.toList());
